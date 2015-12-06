@@ -16,7 +16,7 @@ state: state.geo.json
 
 %.geo.json: %.zip
 	ogr2ogr -t_srs crs:84 -f "GeoJSON" /vsistdout/ /vsizip/$< | \
-		jq '.features' > $@.tmp
+		./data/pluck_features.js > $@.tmp
 	mv $@.tmp $@ && rm $<
 
 %.zip: %.manifest

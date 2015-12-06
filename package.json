@@ -12,6 +12,8 @@
     "topojson": "^1.6.19"
   },
   "devDependencies": {
+    "JSONStream": "1.0.7",
+    "event-stream": "3.3.2",
     "browserify": "^11.0.0",
     "chai": "^3.4.1",
     "co": "4.6.0",

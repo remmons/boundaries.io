@@ -1,6 +1,0 @@
-use geo
-db.postalcodes.ensureIndex({'properties.ZCTA5CE10': 1})
-db.states.ensureIndex({'properties.NAME': 1})
-db.places.ensureIndex({'properties.NAME': 1})
-db.neighborhoods.ensureIndex({'properties.NAME': 1})
-db.counties.ensureIndex({'properties.NAME': 1})

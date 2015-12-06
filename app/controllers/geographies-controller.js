@@ -1,3 +1,4 @@
+var elasticsearch = require('elasticsearch');
 var ApplicationController = require('./application-controller');
 var geojson2svg = require('geojson2svg');
 var reproject = require('reproject-spherical-mercator');
@@ -18,6 +19,7 @@ var GeographiesController = ApplicationController.extend({
 
   _mountCollection: function* () {
     this.geos = yield this.mongo.collection(this.collection);
+    this.es = new elasticsearch.Client;
   },
 
   index: function* () {
@@ -169,6 +171,46 @@ var GeographiesController = ApplicationController.extend({
     };
 
     return yield this.geos.findOne(where, options);
+  },
+
+  atES: function* (lat, lng, options) {
+    options || (options = {});
+
+    var lat = parseFloat(lat, 10);
+    var lng = parseFloat(lng, 10);
+    var where;
+
+    if (isNaN(lat) || isNaN(lng)) return this.throw(304, 'Bad Request');
+    if (!lat || !lng) return this.throw(304, 'Bad Request');
+
+    where = {
+      index: this.collection,
+      type: 'geo',
+      size: 1,
+      body: {
+        query: {
+          bool: {
+            must: {
+              match_all: {}
+            },
+            filter: {
+              geo_shape: {
+                geometry: {
+                  shape: {
+                    type: 'Point',
+                    coordinates: [lng, lat]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var results = yield this.es.search(where);
+
+    return results.hits.hits.map((res) => res._source);
   },
 
   near: function* (lat, lng, options) {
