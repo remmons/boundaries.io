@@ -3,16 +3,16 @@ tiger_url=ftp://ftp2.census.gov/geo/tiger/TIGER2015
 db_name=geo
 
 zcta5: zcta5.geo.json
-	$(call importAndIndex,postalcodes,properties.GEOID10)
+	$(call importAndIndex,postalcodes,GEOID10)
 
 county: county.geo.json
-	$(call importAndIndex,counties,properties.NAME)
+	$(call importAndIndex,counties,NAME)
 
 place: place.geo.json
-	$(call importAndIndex,places,properties.NAME)
+	$(call importAndIndex,places,NAME)
 
 state: state.geo.json
-	$(call importAndIndex,states,properties.NAME)
+	$(call importAndIndex,states,NAME)
 
 %.geo.json: %.zip
 	ogr2ogr -t_srs crs:84 -f "GeoJSON" /vsistdout/ /vsizip/$< | \
@@ -41,15 +41,21 @@ clean:
 	# pass
 
 define importAndIndex
-	mongo localhost/$(db_name) --eval "JSON.stringify(db.$1.ensureIndex({geometry: '2dsphere'}))"
-	mongo localhost/$(db_name) --eval "JSON.stringify(db.$1.ensureIndex({'$2': 'text'}))"
-	mongoimport \
-		--jsonArray \
-		--upsert \
-		--upsertFields $2 \
-		--collection $1 \
-		--db $(db_name) \
-		< ./$<
+	curl -XPUT "localhost:9200/$1" -d '{\
+		"mappings": {\
+			"geo": {\
+				"properties": {\
+					"properties": {\
+						"type": "object"\
+					},\
+					"geometry": {\
+						"type": "geo_shape"\
+					}\
+				}\
+			}\
+		}\
+	}'; echo
+	cat $< | ./data/upsert_elasticsearch.js $1 $2
 endef
 
 .PRECIOUS: %.zip %.geo.json
