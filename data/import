@@ -1,0 +1,73 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+var path = require('path');
+var spawn = require('child_process').spawn;
+var optimist = require('optimist');
+
+var argv = optimist
+  .usage('--feature neighborhoods --id name --source Zillow')
+  .alias('f', 'file')
+  .alias('u', 'url')
+  .alias('s', 'source')
+  .describe('id', 'Unique ID key of the properties object for upserting')
+  .describe('feature', 'Feature name and Index to upsert to')
+  .describe('f', 'Import a file')
+  .describe('u', 'Import a url')
+  .describe('s', 'Filter imports by a source (name)')
+  .demand(['feature'])
+  .argv;
+
+if (argv.u) return pipelineImport(argv.u, argv.feature, argv.id)
+
+var chain = Promise.resolve();
+
+JSON.parse(fs.readFileSync('./data/' + argv.feature + '.json')).forEach((config) => {
+
+  console.log('Importing from : ' + config.source);
+
+  config.files.forEach((url) => {
+    chain = chain.then(function() {
+      return new Promise(function(resolve, reject) {
+        console.log('<-- ' + url);
+        pipelineImport(url, argv.feature, config.uid, () => {
+          console.log('DONE: ' + url);
+          resolve();
+        });
+      });
+    });
+  });
+});
+
+function pipelineImport(url, feature, idKey, cb) {
+
+  if (!idKey) throw new Error('--id is required if not using a manifest');
+
+  var isZip = path.extname(url) === '.zip';
+  var isRemote = /[a-z]+:\/\//.test(url);
+
+  if (isRemote) url = '/vsicurl/' + url;
+  if (isZip) url = '/vsizip/' + url;
+
+  var pluckStream = spawn('data/json_pluck', ['features.*']);
+  var importStream = spawn('data/upsert', [feature, idKey]);
+  var ogrstream = spawn('ogr2ogr', [
+    '-t_srs',
+    'crs:84',
+    '-f',
+    'GeoJSON',
+    '/vsistdout/',
+    url
+  ]);
+
+  ogrstream.stdout.pipe(pluckStream.stdin);
+  pluckStream.stdout.pipe(importStream.stdin);
+  importStream.stdout.pipe(process.stdout);
+
+  ogrstream.stderr.pipe(process.stderr);
+  pluckStream.stderr.pipe(process.stderr);
+  importStream.stderr.pipe(process.stderr);
+
+  importStream.on('exit', (rc) => cb && cb(null, rc));
+
+}

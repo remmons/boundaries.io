@@ -7,6 +7,10 @@ var JSONStream = require('JSONStream');
 process.stdin.setEncoding('utf8');
 
 process.stdin
-  .pipe(JSONStream.parse('features.*'))
+  .pipe(JSONStream.parse(process.argv[2]))
+  .pipe(es.mapSync(function(document) {
+    document.properties['NAME'] = document.properties.name;
+    return document;
+  }))
   .pipe(JSONStream.stringify())
   .pipe(process.stdout);
