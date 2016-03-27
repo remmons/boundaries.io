@@ -4,12 +4,15 @@
 
 // usage upsert index_name unique_id_key_in_properties
 
+const _  = require('lodash')
 const fs = require('fs');
 const es = require('event-stream');
 const JSONStream = require('JSONStream');
 const agent = require('superagent');
 const http = require('http');
-const indexName = process.argv[2];
+const args = process.argv.slice(2);
+const indexName = args.shift();
+const idKey = args.shift();
 const esHTTP = {
   hostname: process.env.ES_HOST || 'localhost',
   path: '/_bulk',
@@ -20,7 +23,6 @@ const esHTTP = {
 const BATCH_SIZE = 200;
 var request;
 var count = 0;
-
 
 agent
   .put(esHTTP.hostname + ':' + esHTTP.port + '/' + indexName)
@@ -34,6 +36,10 @@ agent
           },
           geometry: {
             type: 'geo_shape'
+          },
+          suggest: {
+            type: 'completion',
+            payloads: false
           }
         }
       }
@@ -52,9 +58,14 @@ agent
           index: {
             _index: indexName,
             _type: 'geo',
-            _id: geo.properties[process.argv[3]]
+            _id: geo.properties[idKey]
           }
         };
+
+        geo.properties = keysToLower(geo.properties);
+
+        geo.suggest = {input: [geo.properties.name]};
+
         var chunk = '\n' + [requestMeta, geo].map((obj) => JSON.stringify(obj)).join('\n');
 
         if (!request) {
@@ -84,3 +95,10 @@ agent
 
       }));
   });
+
+function keysToLower(object) {
+  return _.transform(object, (memo, value, key) => {
+    memo[key.toLowerCase()] = value;
+    delete memo[key]
+  });
+}

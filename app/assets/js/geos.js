@@ -7,8 +7,17 @@ var Geo = Backbone.Model.extend({
     return [coords[1], coords[0]];
   },
   label: function() {
-    return this.get('properties')['GEOID']
+    return this.get('properties').GEOID
   }
+});
+
+
+var Country = Geo.extend({
+  label: function() {
+    return this.get('properties').name;
+  }
+}, {
+  queryKey: 'properties.NAME'
 });
 
 var PostalCode = Geo.extend({
@@ -37,7 +46,7 @@ var Place = Geo.extend({
 
 var Neighborhood = Geo.extend({
   label: function() {
-    return this.get('properties')['NAME'];
+    return this.get('properties').name;
   }
 }, {
   queryKey: 'properties.NAME'
@@ -45,7 +54,7 @@ var Neighborhood = Geo.extend({
 
 var County = Geo.extend({
   label: function() {
-    return this.get('properties')['NAMELSAD'];
+    return this.get('properties').NAMELSAD;
   }
 }, {
   queryKey: 'properties.NAMELSAD'
@@ -53,15 +62,20 @@ var County = Geo.extend({
 
 var State = Geo.extend({
   label: function() {
-    return this.get('properties')['NAME'];
+    return this.get('properties').name;
   }
 }, {
-  queryKey: 'properties.NAME'
+  queryKey: 'properties.name'
 });
 
 var Geos = Backbone.Collection.extend({
   model: Geo,
   url: '/geographies'
+});
+
+var CountryCollection = Geos.extend({
+  model: Country,
+  url: '/geographies/countries'
 });
 
 var PostalCodeCollection = Geos.extend({

@@ -6,6 +6,9 @@ var ApplicationController = Controller.extend({
     Controller.apply(this, arguments);
 
     this.set('links', [{
+      title: 'Countries',
+      controller: 'geographies/countries'
+    }, {
       title: 'States',
       controller: 'geographies/states'
     }, {

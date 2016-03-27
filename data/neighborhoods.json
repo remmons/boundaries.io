@@ -55,7 +55,7 @@
     ]
   },
   {
-    "source": "github.com/blackmad/neighborhoods",
+    "source": "blackmad/neighborhoods",
     "uid": "name",
     "files": [
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/albany.geojson",
@@ -152,7 +152,7 @@
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/springfield.geojson",
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/st-louis.geojson",
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/st-petersburg.geojson",
-      "https://raw.githubusercontent.com/blackmad/neighborhoods/master/stamform.geojson",
+      "https://raw.githubusercontent.com/blackmad/neighborhoods/master/stamford.geojson",
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/staten-island.geojson",
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/tampa.geojson",
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/toronto.geojson",

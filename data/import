@@ -4,25 +4,29 @@ var fs = require('fs');
 var path = require('path');
 var spawn = require('child_process').spawn;
 var optimist = require('optimist');
-
 var argv = optimist
-  .usage('--feature neighborhoods --id name --source Zillow')
   .alias('f', 'file')
   .alias('u', 'url')
   .alias('s', 'source')
   .describe('id', 'Unique ID key of the properties object for upserting')
-  .describe('feature', 'Feature name and Index to upsert to')
   .describe('f', 'Import a file')
   .describe('u', 'Import a url')
   .describe('s', 'Filter imports by a source (name)')
-  .demand(['feature'])
+  .demand(1)
   .argv;
-
-if (argv.u) return pipelineImport(argv.u, argv.feature, argv.id)
-
+var feature = argv._[0];
+var manifestPath = path.join('.', 'data', feature + '.json');
 var chain = Promise.resolve();
 
-JSON.parse(fs.readFileSync('./data/' + argv.feature + '.json')).forEach((config) => {
+if (argv.url) return pipelineImport(argv.url, feature, argv.id)
+
+if (!fs.existsSync(manifestPath)) throw new Error('Unrecognized feature "' + feature + '"');
+
+JSON.parse(fs.readFileSync(manifestPath))
+.filter((config) => {
+  return argv.source ? argv.source === config.source : true;
+})
+.forEach((config) => {
 
   console.log('Importing from : ' + config.source);
 
@@ -30,7 +34,7 @@ JSON.parse(fs.readFileSync('./data/' + argv.feature + '.json')).forEach((config)
     chain = chain.then(function() {
       return new Promise(function(resolve, reject) {
         console.log('<-- ' + url);
-        pipelineImport(url, argv.feature, config.uid, () => {
+        pipelineImport(url, feature, config.uid, () => {
           console.log('DONE: ' + url);
           resolve();
         });

@@ -158,31 +158,6 @@ var GeographiesController = ApplicationController.extend({
     if (isNaN(lat) || isNaN(lng)) return this.throw(304, 'Bad Request');
     if (!lat || !lng) return this.throw(304, 'Bad Request');
 
-    options = kona._.assign({limit: 1}, options);
-    where = {
-      geometry: {
-        $geoIntersects: {
-          $geometry: {
-            type: 'Point',
-            coordinates: [lng, lat]
-          }
-        }
-      }
-    };
-
-    return yield this.geos.findOne(where, options);
-  },
-
-  atES: function* (lat, lng, options) {
-    options || (options = {});
-
-    var lat = parseFloat(lat, 10);
-    var lng = parseFloat(lng, 10);
-    var where;
-
-    if (isNaN(lat) || isNaN(lng)) return this.throw(304, 'Bad Request');
-    if (!lat || !lng) return this.throw(304, 'Bad Request');
-
     where = {
       index: this.collection,
       type: 'geo',
