@@ -1,5 +1,5 @@
 objects=zcta5 county place state
-tiger_url=ftp://ftp2.census.gov/geo/tiger/TIGER2014
+tiger_url=ftp://ftp2.census.gov/geo/tiger/TIGER2015
 db_name=geo
 
 zcta5: zcta5.geo.json
@@ -27,7 +27,7 @@ state: state.geo.json
 	$(eval url := $(tiger_url)/$(shell echo $* | tr -s '[:lower:]' '[:upper:]')/)
 	curl -l $(url) | \
 		sort -nr | \
-		sed 's,^,$(url)/,' > $*.tmp
+		sed 's,^,$(url),' > $*.tmp
 	test -s ./$*.tmp && mv $*.tmp $@
 
 image:
