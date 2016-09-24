@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:5.9
+FROM mhart/alpine-node:6.6.0
 
 RUN apk add --no-cache \
   make \
@@ -12,10 +12,12 @@ RUN apk add --no-cache \
 ENV NODE_ENV development
 
 WORKDIR /app
+
+ADD package.json .
+RUN npm install
+
 ADD . .
 
 EXPOSE 3334
 
-RUN npm install
-
-CMD node app.js
+CMD bin/start

@@ -30,6 +30,13 @@ state: state.geo.json
 		sed 's,^,$(url)/,' > $*.tmp
 	test -s ./$*.tmp && mv $*.tmp $@
 
+image:
+	docker build -t gcr.io/boundariesio/api:$$(git rev-parse --short HEAD) .
+
+push: image
+	gcloud docker push gcr.io/boundariesio/api:$$(git rev-parse --short HEAD)
+
+
 clean:
 	# pass
 
@@ -48,4 +55,4 @@ endef
 .PRECIOUS: %.zip %.geo.json
 .INTERMEDIATE: %.tmp
 
-.PHONY: clean $(objects)
+.PHONY: clean $(objects) image
