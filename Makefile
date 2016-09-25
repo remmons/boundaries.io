@@ -2,6 +2,15 @@ objects=zcta5 county place state
 tiger_url=ftp://ftp2.census.gov/geo/tiger/TIGER2015
 db_name=geo
 
+planet: data/planet
+
+data/planet: data/planet.tgz
+	tar -zxvf $< ./data
+
+data/planet.tgz:
+	curl http://s3.amazonaws.com/osm-polygons.mapzen.com/planet_geojson.tgz -o $@.download
+	mv $@.download $@
+
 zcta5: zcta5.geo.json
 	$(call importAndIndex,postalcodes,GEOID10)
 

@@ -1,7 +1,7 @@
 [
   {
     "source": "Tiger",
-    "uid": "NAME",
+    "uid": "properties.NAME",
     "files": [
       "http://ftp2.census.gov/geo/tiger/TIGER2015/PLACE/tl_2015_01_place.zip",
       "http://ftp2.census.gov/geo/tiger/TIGER2015/PLACE/tl_2015_02_place.zip",

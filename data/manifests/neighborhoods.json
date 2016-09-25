@@ -1,7 +1,7 @@
 [
   {
     "source": "Zillow",
-    "uid": "NAME",
+    "uid": "properties.NAME",
     "files": [
       "http://www.zillow.com/static/shp/ZillowNeighborhoods-AK.zip",
       "http://www.zillow.com/static/shp/ZillowNeighborhoods-AL.zip",
@@ -49,14 +49,14 @@
   },
   {
     "source": "durham-hoods",
-    "uid": "name",
+    "uid": "properties.name",
     "files": [
       "https://raw.githubusercontent.com/PhillipBost/durham-hoods-geojson/master/durham-hoods.geojson"
     ]
   },
   {
     "source": "blackmad/neighborhoods",
-    "uid": "name",
+    "uid": "properties.name",
     "files": [
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/albany.geojson",
       "https://raw.githubusercontent.com/blackmad/neighborhoods/master/amsterdam.geojson",

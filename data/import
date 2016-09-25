@@ -16,7 +16,6 @@ const argv = optimist
   .argv;
 const feature = argv._[0];
 const manifestPath = path.join('.', 'manifests', feature + '.json');
-let chain = Promise.resolve();
 
 if (argv.url) return pipelineImport(argv.url, feature, argv.id);
 
@@ -28,11 +27,13 @@ JSON.parse(fs.readFileSync(manifestPath))
 })
 .forEach((config) => {
 
+  let chain = Promise.resolve();
+
   config.files.forEach((url) => {
     chain = chain.then(function() {
       return new Promise(function(resolve, reject) {
 
-        console.log('Importing \n\t Source: ' + config.source);
+        console.log('\n\s\sSource: ' + config.source);
 
         pipelineImport(url, feature, config.uid, (err, rc) => {
           if (err) {
@@ -44,15 +45,10 @@ JSON.parse(fs.readFileSync(manifestPath))
         });
 
       });
-    });
-  });
 
-  chain.then(() => {
-    console.log('\n==============\nAll files complete.');
-  }).catch((err) => {
-    console.error(err);
-    process.exit(1);
-  })
+    });
+
+  });
 });
 
 function pipelineImport(url, collection, idKey, cb) {
@@ -61,30 +57,33 @@ function pipelineImport(url, collection, idKey, cb) {
 
   if (!idKey) throw new Error('--id is required if not using a manifest');
 
-  var isZip = path.extname(url) === '.zip';
+  var isZip = path.extname(url).match(/\.zip|\.tgz/);
   var isRemote = /[a-z]+:\/\//.test(url);
 
   if (isRemote) url = `/vsicurl/${url}`;
   if (isZip) url = `/vsizip/${url}`;
 
-  url = url.replace(/^(vsizip)\/{2}/, '$1/');
+  url = url.replace(/^\/(vsizip)\/{2}/, '\/$1/');
 
   var pluckStream = spawn('./json_pluck', ['features.*']);
   var importStream = spawn('./upsert2', [collection, idKey]);
-  var ogrstream = spawn('ogr2ogr', [
-    '-t_srs',
-    'crs:84',
-    '-f',
-    'GeoJSON',
-    '/vsistdout/',
-    url
-  ]);
+  // var readStream = spawn('ogr2ogr', [
+  //   '-t_srs',
+  //   'crs:84',
+  //   '-f',
+  //   'GeoJSON',
+  //   '/vsistdout/',
+  //   url
+  // ]);
 
-  ogrstream.stdout.pipe(pluckStream.stdin);
+  var readStream = fs.createReadStream(url);
+
+  readStream.pipe(pluckStream.stdin);
   pluckStream.stdout.pipe(importStream.stdin);
+
   importStream.stdout.pipe(process.stdout);
 
-  ogrstream.stderr.pipe(process.stderr);
+  // readStream.stderr.pipe(process.stderr);
   pluckStream.stderr.pipe(process.stderr);
   importStream.stderr.pipe(process.stderr);
 

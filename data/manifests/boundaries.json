@@ -1,0 +1,29 @@
+[
+  {
+    "source": "Mapzen (Open Street Maps - mapzen.com) ",
+    "uid": "id",
+    "files": [
+      "./planet/admin_level_0.geojson",
+      "./planet/admin_level_1.geojson",
+      "./planet/admin_level_2.geojson",
+      "./planet/admin_level_3.geojson",
+      "./planet/admin_level_4.geojson",
+      "./planet/admin_level_5.geojson",
+      "./planet/admin_level_6.geojson",
+      "./planet/admin_level_7.geojson",
+      "./planet/admin_level_8.geojson",
+      "./planet/admin_level_9.geojson",
+      "./planet/admin_level_10.geojson",
+      "./planet/admin_level_11.geojson",
+      "./planet/admin_level_12.geojson",
+      "./planet/admin_level_13.geojson",
+      "./planet/admin_level_14.geojson",
+      "./planet/admin_level_15.geojson",
+      "./planet/admin_level_2229.geojson",
+      "./planet/admin_level_42.geojson",
+      "./planet/admin_level_94.geojson",
+      "./planet/admin_level_95.geojson",
+      "./planet/admin_level_other.geojson"
+    ]
+  }
+]

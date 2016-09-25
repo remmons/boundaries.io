@@ -1,4 +1,4 @@
-var Geo = Backbone.Model.extend({
+var Boundary = Backbone.Model.extend({
   idAttribute: '_id',
   toLatLng: function() {
     var coords = this.get('geometry').coordinates[0];
@@ -7,100 +7,15 @@ var Geo = Backbone.Model.extend({
     return [coords[1], coords[0]];
   },
   label: function() {
-    return this.get('properties').GEOID
-  }
-});
-
-
-var Country = Geo.extend({
-  label: function() {
-    return this.get('properties').name;
-  }
-}, {
-  queryKey: 'properties.NAME'
-});
-
-var PostalCode = Geo.extend({
-  toLatLng: function() {
-    var props = this.get('properties');
-    return [props['INTPTLAT10'], props['INTPTLON10']];
-  },
-  label: function() {
-    return this.get('properties')['ZCTA5CE10'];
-  }
-}, {
-  queryKey: 'properties.ZCTA5CE10'
-});
-
-var Place = Geo.extend({
-  toLatLng: function() {
-    var props = this.get('properties');
-    return [props['INTPTLAT'], props['INTPTLON']];
-  },
-  label: function() {
-    return this.get('properties')['NAME'];
-  }
-}, {
-  queryKey: 'properties.NAME'
-});
-
-var Neighborhood = Geo.extend({
-  label: function() {
-    return this.get('properties').name;
-  }
-}, {
-  queryKey: 'properties.NAME'
-});
-
-var County = Geo.extend({
-  label: function() {
-    return this.get('properties').NAMELSAD;
-  }
-}, {
-  queryKey: 'properties.NAMELSAD'
-});
-
-var State = Geo.extend({
-  label: function() {
-    return this.get('properties').name;
+    return this.get('properties').name
   }
 }, {
   queryKey: 'properties.name'
 });
 
-var Geos = Backbone.Collection.extend({
-  model: Geo,
-  url: '/geographies'
-});
-
-var CountryCollection = Geos.extend({
-  model: Country,
-  url: '/geographies/countries'
-});
-
-var PostalCodeCollection = Geos.extend({
-  model: PostalCode,
-  url: '/geographies/postal-codes'
-});
-
-var PlaceCollection = Geos.extend({
-  model: Place,
-  url: '/geographies/places'
-});
-
-var NeighborhoodCollection = Geos.extend({
-  model: Neighborhood,
-  url: '/geographies/neighborhoods'
-});
-
-var CountyCollection = Geos.extend({
-  model: County,
-  url: '/geographies/counties'
-});
-
-var StateCollection = Geos.extend({
-  model: State,
-  url: '/geographies/states'
+var BoundaryCollection = Backbone.Collection.extend({
+  model: Boundary,
+  url: '/boundaries'
 });
 
 var Map = Backbone.View.extend({
@@ -270,7 +185,9 @@ var GeoMap = Map.extend({
       localStorage.setItem('bounds',
         this.featureGroup.getBounds().toBBoxString()
       );
-    } catch(e) {console.error(e)}
+    } catch(e) {
+      console.error(e);
+    }
 
   },
 

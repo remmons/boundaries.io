@@ -9,13 +9,11 @@ services:
     ports:
       - "3334:3334"
     links:
-      - mongo
-  mongo:
-    image: mongo:3.1.9
+      - db
+  db:
+    image: mongo:3.2
     volumes_from:
       - data
-    ports:
-      - "27017:27017"
   data:
     image: busybox:latest
     volumes:
@@ -26,4 +24,4 @@ services:
       - ./data:/data
       - /data/node_modules
     links:
-      - mongo
+      - db

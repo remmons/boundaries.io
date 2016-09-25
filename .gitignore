@@ -34,3 +34,5 @@ bower_components
 
 *.geo.json
 *.zip
+*.geojson
+data/planet

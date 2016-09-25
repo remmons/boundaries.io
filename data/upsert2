@@ -1,10 +1,10 @@
 #!/bin/bash
 
-mongo mongo/geo --eval \
+mongo db/geo --eval \
   "JSON.stringify(db.$1.ensureIndex({geometry: '2dsphere'}) && db.$1.ensureIndex({'$2': 'text'}))"
 
 cat | mongoimport \
-	--host mongo:27017 \
+	--host db \
   --jsonArray \
   --upsert \
   --upsertFields $2 \
