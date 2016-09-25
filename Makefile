@@ -41,22 +41,34 @@ clean:
 	# pass
 
 define importAndIndex
-	curl -XPUT "localhost:9200/$1" -d '{\
-		"mappings": {\
-			"geo": {\
-				"properties": {\
-					"properties": {\
-						"type": "object"\
-					},\
-					"geometry": {\
-						"type": "geo_shape"\
-					}\
-				}\
-			}\
-		}\
-	}'; echo
-	cat $< | ./data/upsert_elasticsearch.js $1 $2
+	mongo localhost/$(db_name) --eval "JSON.stringify(db.$1.ensureIndex({geometry: '2dsphere'}))"
+	mongo localhost/$(db_name) --eval "JSON.stringify(db.$1.ensureIndex({'$2': 'text'}))"
+	mongoimport \
+		--jsonArray \
+		--upsert \
+		--upsertFields $2 \
+		--collection $1 \
+		--db $(db_name) \
+		< ./$<
 endef
+
+# define importAndIndex
+# 	curl -XPUT "localhost:9200/$1" -d '{\
+# 		"mappings": {\
+# 			"geo": {\
+# 				"properties": {\
+# 					"properties": {\
+# 						"type": "object"\
+# 					},\
+# 					"geometry": {\
+# 						"type": "geo_shape"\
+# 					}\
+# 				}\
+# 			}\
+# 		}\
+# 	}'; echo
+# 	cat $< | ./data/upsert $1 $2
+# endef
 
 .PRECIOUS: %.zip %.geo.json
 .INTERMEDIATE: %.tmp

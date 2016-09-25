@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
-var path = require('path');
-var spawn = require('child_process').spawn;
-var optimist = require('optimist');
-var argv = optimist
+const fs = require('fs');
+const path = require('path');
+const spawn = require('child_process').spawn;
+const optimist = require('optimist');
+const argv = optimist
   .alias('f', 'file')
   .alias('u', 'url')
   .alias('s', 'source')
@@ -14,11 +14,11 @@ var argv = optimist
   .describe('s', 'Filter imports by a source (name)')
   .demand(1)
   .argv;
-var feature = argv._[0];
-var manifestPath = path.join('.', 'data', feature + '.json');
-var chain = Promise.resolve();
+const feature = argv._[0];
+const manifestPath = path.join('.', 'manifests', feature + '.json');
+let chain = Promise.resolve();
 
-if (argv.url) return pipelineImport(argv.url, feature, argv.id)
+if (argv.url) return pipelineImport(argv.url, feature, argv.id);
 
 if (!fs.existsSync(manifestPath)) throw new Error('Unrecognized feature "' + feature + '"');
 
@@ -28,33 +28,49 @@ JSON.parse(fs.readFileSync(manifestPath))
 })
 .forEach((config) => {
 
-  console.log('Importing from : ' + config.source);
-
   config.files.forEach((url) => {
     chain = chain.then(function() {
       return new Promise(function(resolve, reject) {
-        console.log('<-- ' + url);
-        pipelineImport(url, feature, config.uid, () => {
+
+        console.log('Importing \n\t Source: ' + config.source);
+
+        pipelineImport(url, feature, config.uid, (err, rc) => {
+          if (err) {
+            console.error(`ERROR: ${err.toString()}`)
+            reject(err);
+          }
           console.log('DONE: ' + url);
           resolve();
         });
+
       });
     });
   });
+
+  chain.then(() => {
+    console.log('\n==============\nAll files complete.');
+  }).catch((err) => {
+    console.error(err);
+    process.exit(1);
+  })
 });
 
-function pipelineImport(url, feature, idKey, cb) {
+function pipelineImport(url, collection, idKey, cb) {
+
+  console.log('<-- ' + url);
 
   if (!idKey) throw new Error('--id is required if not using a manifest');
 
   var isZip = path.extname(url) === '.zip';
   var isRemote = /[a-z]+:\/\//.test(url);
 
-  if (isRemote) url = '/vsicurl/' + url;
-  if (isZip) url = '/vsizip/' + url;
+  if (isRemote) url = `/vsicurl/${url}`;
+  if (isZip) url = `/vsizip/${url}`;
 
-  var pluckStream = spawn('data/json_pluck', ['features.*']);
-  var importStream = spawn('data/upsert', [feature, idKey]);
+  url = url.replace(/^(vsizip)\/{2}/, '$1/');
+
+  var pluckStream = spawn('./json_pluck', ['features.*']);
+  var importStream = spawn('./upsert2', [collection, idKey]);
   var ogrstream = spawn('ogr2ogr', [
     '-t_srs',
     'crs:84',
@@ -72,6 +88,8 @@ function pipelineImport(url, feature, idKey, cb) {
   pluckStream.stderr.pipe(process.stderr);
   importStream.stderr.pipe(process.stderr);
 
-  importStream.on('exit', (rc) => cb && cb(null, rc));
+  importStream
+    .on('exit', (rc) => cb && cb(null, rc))
+    .on('error', (rc) => cb && cb(rc));
 
 }

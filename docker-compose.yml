@@ -1,6 +1,6 @@
 version: '2'
 services:
-  web:
+  api:
     build: .
     command: npm start
     volumes:
@@ -9,8 +9,8 @@ services:
     ports:
       - "3334:3334"
     links:
-      - db
-  db:
+      - mongo
+  mongo:
     image: mongo:3.1.9
     volumes_from:
       - data
@@ -20,3 +20,10 @@ services:
     image: busybox:latest
     volumes:
       - /data
+  dataconsole:
+    build: ./data
+    volumes:
+      - ./data:/data
+      - /data/node_modules
+    links:
+      - mongo

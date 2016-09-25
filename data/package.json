@@ -1,0 +1,11 @@
+{
+  "name": "boundaries.io-dataconsole",
+  "version": "0.0.1",
+  "dependencies": {
+    "optimist": "0.6.1",
+    "lodash": "3.10.1",
+    "event-stream": "3.3.2",
+    "JSONStream": "1.0.7",
+    "superagent": "1.5.0"
+  }
+}

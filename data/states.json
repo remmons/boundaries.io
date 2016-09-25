@@ -1,9 +1,0 @@
-[
-  {
-    "source": "Tiger",
-    "uid": "GEOID10",
-    "files": [
-      "ftp://ftp2.census.gov/geo/tiger/TIGER2015/STATE/tl_2015_us_state.zip"
-    ]
-  }
-]
