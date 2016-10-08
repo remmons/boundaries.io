@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: import
+spec:
+  template:
+    metadata:
+      name: import
+    spec:
+      containers:
+      - name: import
+        image: gcr.io/boundariesio/dataconsole:v5
+        command: ["./bulk_import"]
+      restartPolicy: Never

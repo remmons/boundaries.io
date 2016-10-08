@@ -19,10 +19,10 @@
       "./planet/admin_level_13.geojson",
       "./planet/admin_level_14.geojson",
       "./planet/admin_level_15.geojson",
-      "./planet/admin_level_2229.geojson",
       "./planet/admin_level_42.geojson",
       "./planet/admin_level_94.geojson",
       "./planet/admin_level_95.geojson",
+      "./planet/admin_level_2229.geojson",
       "./planet/admin_level_other.geojson"
     ]
   }

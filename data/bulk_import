@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+set -x
+
+curl http://s3.amazonaws.com/osm-polygons.mapzen.com/planet_geojson.tgz | tar -zxvf -
+
+./import boundaries

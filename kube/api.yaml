@@ -34,9 +34,11 @@ spec:
       labels:
         name: api
     spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: default-pool
       containers:
       - name: api
-        image: gcr.io/boundariesio/api:cc7be72
+        image: gcr.io/boundariesio/api:ccdd1c2
         ports:
         - containerPort: 3334
         livenessProbe:

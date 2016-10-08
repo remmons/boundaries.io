@@ -22,6 +22,5 @@ services:
     build: ./data
     volumes:
       - ./data:/data
-      - /data/node_modules
     links:
       - db

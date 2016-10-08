@@ -1,0 +1,4 @@
+*.geojson
+*.geo.json
+data/planet
+data
