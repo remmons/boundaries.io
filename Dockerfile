@@ -1,23 +1,17 @@
-FROM mhart/alpine-node:6.6.0
+FROM golang:1.8
 
-RUN apk add --no-cache \
-  make \
-  gcc \
-  g++ \
-  curl \
-  git \
-  unzip \
-  zlib-dev
+WORKDIR /go/src/github.com/jbielick/boundaries.io
 
-ENV NODE_ENV development
+RUN go get -u github.com/kardianos/govendor
 
-WORKDIR /app
+# COPY ./vendor ./vendor
 
-ADD package.json .
-RUN npm install
+# RUN govendor sync
 
-ADD . .
+COPY . .
 
-EXPOSE 3334
+RUN go get ./...
 
-CMD bin/start
+EXPOSE 3001
+
+CMD go run main.go

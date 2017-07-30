@@ -2,28 +2,19 @@ version: '2'
 services:
   api:
     build: .
-    command: npm start
     volumes:
-      - .:/app
-      - /app/node_modules
+      - .:/go/src/github.com/jbielick/boundaries.io
     ports:
-      - "3334:3334"
+      - "3001:3001"
     links:
       - mongo
   mongo:
-    image: mongo:3.1.9
-    volumes_from:
-      - data
+    build: ./mongo
+    volumes:
+      - ./mongo:/app
+      - db-data:/data/db
     ports:
       - "27017:27017"
-  data:
-    image: busybox:latest
-    volumes:
-      - /data
-  dataconsole:
-    build: ./data
-    volumes:
-      - ./data:/data
-      - /data/node_modules
-    links:
-      - mongo
+volumes:
+  db-data:
+    driver: local
