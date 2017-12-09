@@ -134,7 +134,20 @@ data and the [Durham Hoods](http://durhamhoods.com/) project.
 
 A development environment can be setup expediently with docker-compose. Install [Docker for Mac](https://docs.docker.com/engine/installation/mac/) (or your platform) and run `docker-compose up` to get the server up and running.
 
+`docker-compose run --rm --service-ports api sh`
 
+`npm install -g bower`
+
+`npm install`
+
+`bower install --allow-root`
+
+`npm start`
+
+```
+# .env
+DB_URL=mongodb://mongo/geo
+```
 
 The application should then be available at `localhost:3334` from your host machine (or docker machine).
 
