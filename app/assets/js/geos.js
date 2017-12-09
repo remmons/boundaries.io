@@ -134,19 +134,19 @@ var Map = Backbone.View.extend({
   },
 
   tiles: {
-    'CartoDB_PositronNoLabels': ['http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+    'CartoDB_PositronNoLabels': ['https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
       subdomains: 'abcd',
       minZoom: 0,
       maxZoom: 18
     }],
-    'CartoDB_Positron': ['http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+    'CartoDB_Positron': ['https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
       subdomains: 'abcd',
       minZoom: 0,
       maxZoom: 18
     }],
-    'CartoDB_DarkMatterNoLabels': ['http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
+    'CartoDB_DarkMatterNoLabels': ['https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
       subdomains: 'abcd',
       minZoom: 0,
