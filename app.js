@@ -4,9 +4,9 @@ var compress = require('koa-compress');
 
 // add some middleware
 app.on('hook:middleware', function* () {
-  this.use(compress());
+  app.use(compress());
 });
 
 app.initialize().on('ready', function() {
-  this.listen();
+  app.listen(process.env.PORT);
 });
