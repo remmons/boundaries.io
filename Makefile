@@ -1,18 +1,18 @@
 objects=zcta5 county place state
-tiger_url=ftp://ftp2.census.gov/geo/tiger/TIGER2015
+tiger_url=ftp://ftp2.census.gov/geo/tiger/TIGER2016
 db_name=geo
 
 zcta5: zcta5.geo.json
-	$(call importAndIndex,postalcodes,GEOID10)
+	$(call importAndIndex,postalcodes,properties.GEOID10)
 
 county: county.geo.json
-	$(call importAndIndex,counties,NAME)
+	$(call importAndIndex,counties,properties.NAME)
 
 place: place.geo.json
-	$(call importAndIndex,places,NAME)
+	$(call importAndIndex,places,properties.NAME)
 
 state: state.geo.json
-	$(call importAndIndex,states,NAME)
+	$(call importAndIndex,states,properties.NAME)
 
 %.geo.json: %.zip
 	ogr2ogr -t_srs crs:84 -f "GeoJSON" /vsistdout/ /vsizip/$< | \
@@ -44,7 +44,6 @@ define importAndIndex
 	mongo localhost/$(db_name) --eval "JSON.stringify(db.$1.ensureIndex({geometry: '2dsphere'}))"
 	mongo localhost/$(db_name) --eval "JSON.stringify(db.$1.ensureIndex({'$2': 'text'}))"
 	mongoimport \
-		--jsonArray \
 		--upsert \
 		--upsertFields $2 \
 		--collection $1 \
