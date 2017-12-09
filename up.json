@@ -7,6 +7,9 @@
     },
     "staging": {
       "domain": "staging.boundaries.io"
+    },
+    "development": {
+      "domain": "dev.boundaries.io"
     }
   },
   "proxy": {
