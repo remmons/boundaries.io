@@ -1,0 +1,26 @@
+{
+  "name": "boundaresio",
+  "profile": "aws-up",
+  "stages": {
+    "production": {
+      "domain": "boundaries.io"
+    },
+    "staging": {
+      "domain": "staging.boundaries.io"
+    }
+  },
+  "proxy": {
+    "command": "node app.js"
+  },
+  "regions": ["us-east-1"],
+  "lambda": {
+    "memory": 2048
+  },
+  "error_pages": {
+    "enable": true,
+    "variables": {
+      "support_email": "jbielick@gmail.com",
+      "color": "#228ae6"
+    }
+  }
+}
