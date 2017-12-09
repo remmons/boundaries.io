@@ -34,3 +34,6 @@ bower_components
 
 *.geo.json
 *.zip
+.DS_Store
+data/planet
+mongo
