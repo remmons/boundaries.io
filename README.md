@@ -39,7 +39,7 @@ the `geographies/{geography}` endpoint to search all text fields for a url query
 Example:
 
 ```
-curl -H 'Accept: application/json' http://boundaries.io/geographies/postal-codes?search=33060
+curl -H 'Accept: application/json' https://boundaries.io/geographies/postal-codes?search=33060
 ```
 
 
@@ -58,7 +58,7 @@ The corresponding mongodb geospatial query operator is `$geoIntersects`.
 Example:
 
 ```
-curl -H 'Accept: application/json' http://boundaries.io/geographies/postal-codes/whereami?lat=36.011616617997426&lng=-78.9103317260742
+curl -H 'Accept: application/json' https://boundaries.io/geographies/postal-codes/whereami?lat=36.011616617997426&lng=-78.9103317260742
 ```
 
 
@@ -75,8 +75,8 @@ name property. For postal codes this is the 5-digit common code. For states this
 Example:
 
 ```
-curl -H 'accept: application/json' http://boundaries.io/geographies/postal-codes/named/27705
-curl -H 'accept: application/json' http://boundaries.io/geographies/states/named/north%20carolina
+curl -H 'accept: application/json' https://boundaries.io/geographies/postal-codes/named/27705
+curl -H 'accept: application/json' https://boundaries.io/geographies/states/named/north%20carolina
 ```
 
 Named (SVG Image)
@@ -91,7 +91,7 @@ Parameters:
 Example:
 
 ```
-curl http://boundaries.io/geographies/states/named/north%20carolina.svg
+curl https://boundaries.io/geographies/states/named/north%20carolina.svg
 # => <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
 #        <path d="M64.0623532378737,21.511595932804283
 ```
@@ -109,7 +109,7 @@ The corresponding mongodb geospatial query operator is `$near`.
 Example:
 
 ```
-curl -H 'Accept: application/json' http://boundaries.io/geographies/postal-codes/nearme?lat=36.011616617997426&lng=-78.9103317260742
+curl -H 'Accept: application/json' https://boundaries.io/geographies/postal-codes/nearme?lat=36.011616617997426&lng=-78.9103317260742
 ```
 
 Requesting TopoJSON data:
